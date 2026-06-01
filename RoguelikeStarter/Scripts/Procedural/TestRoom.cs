@@ -4,10 +4,10 @@ using System.Collections.Generic;
 
 public partial class TestRoom
 {
-	public Vector2 RoomPosition;
+	public Vector2I RoomPosition;
 	public bool[] AvailableDoor=new bool[4];
 
-	public TestRoom(Vector2 pPos)
+	public TestRoom(Vector2I pPos)
 	{
 		RoomPosition=pPos;
 		for (int i = 0; i < AvailableDoor.Length; i++)

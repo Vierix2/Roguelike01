@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://b7624ap3xelh6"]
+
+[ext_resource type="Script" path="res://Scripts/Procedural/GraphGenerator.cs" id="1_26fah"]
+
+[node name="TestGen" type="Node2D"]
+position = Vector2(639, 328)
+script = ExtResource("1_26fah")

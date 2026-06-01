@@ -8,27 +8,32 @@ public partial class GraphGenerator : Node
 	List<TestRoom> Rooms=new List<TestRoom>();
 	TestRoom currentRoom;
 	int numberOfCreatedRoom;
-	[Export] int roomToCreate;
-	Vector2 nextPos;
+	[Export] int roomToCreate=10;
+	Vector2I nextPos;
 	RandomNumberGenerator rand=new RandomNumberGenerator();
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		currentRoom=SaveStartRoom(Vector2.Zero);
+		GD.Print("Start0");
+		currentRoom=SaveStartRoom(Vector2I.Zero);
 		while (numberOfCreatedRoom<(roomToCreate+1))
 		{
-			int lDoorSelected=rand.RandiRange(0,4);
-			nextPos=currentRoom.RoomPosition+Vector2.FromAngle((lDoorSelected-1)*(Mathf.Pi/2));//add memory check
+			GD.Print("NEW TRY, number of room created",numberOfCreatedRoom);
+			int lDoorSelected=rand.RandiRange(0,3);
+			GD.Print("selected Door",lDoorSelected,currentRoom.RoomPosition+Vector2.FromAngle((lDoorSelected-1)*(Mathf.Pi/2)) );
+			nextPos=(Vector2I)((currentRoom.RoomPosition+Vector2.FromAngle((lDoorSelected-1)*(Mathf.Pi/2))).Round());
 			if (CheckPossibility(lDoorSelected))
 			{
+				currentRoom.AvailableDoor[lDoorSelected]=false;
 				if(numberOfCreatedRoom==roomToCreate)currentRoom=SaveEndRoom(nextPos);
 				else currentRoom=SaveRoom(nextPos);
+				currentRoom.AvailableDoor[lDoorSelected]=false;
 				numberOfCreatedRoom++;
 			}
 		}
 		for (int i = 0; i < Rooms.Count; i++)
 		{
-			GD.Print(Rooms[i].RoomPosition);
+			GD.Print(i,":",Rooms[i].RoomPosition);
 		}
 
 
@@ -41,22 +46,24 @@ public partial class GraphGenerator : Node
 		
 	}
 
-	TestRoom SaveRoom(Vector2 pPos)
+	TestRoom SaveRoom(Vector2I pPos)
 	{
-		return new TestRoom(pPos);
+		TestRoom testRoom= new TestRoom(pPos);
+		Rooms.Add(testRoom);
+		return testRoom;
 	}
-	TestRoom SaveEndRoom(Vector2 pPos)
+	TestRoom SaveEndRoom(Vector2I pPos)
 	{
 		return SaveRoom(pPos);
 	}
-	TestRoom SaveStartRoom(Vector2 pPos)
+	TestRoom SaveStartRoom(Vector2I pPos)
 	{
 		return SaveRoom(pPos);
 	}
 	bool CheckPossibility(int lDoorSelected)
 	{
 		if(!currentRoom.AvailableDoor[lDoorSelected])return false;
-		bool result=false;
+		bool result=true;
 		foreach(TestRoom room in Rooms)
 		{
 			if (room.RoomPosition == nextPos)
