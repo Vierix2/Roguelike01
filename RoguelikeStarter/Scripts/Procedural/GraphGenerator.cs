@@ -9,21 +9,29 @@ public partial class GraphGenerator : Node
 	TestRoom currentRoom;
 	int numberOfCreatedRoom;
 	[Export] int roomToCreate;
+	Vector2 nextPos;
 	RandomNumberGenerator rand=new RandomNumberGenerator();
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		currentRoom=SaveStartRoom(Vector2.Zero);
-		while (numberOfCreatedRoom<roomToCreate)
+		while (numberOfCreatedRoom<(roomToCreate+1))
 		{
 			int lDoorSelected=rand.RandiRange(0,4);
-			Vector2 nextPos=currentRoom.RoomPosition+Vector2.FromAngle((lDoorSelected-1)*(Mathf.Pi/2));//add memory check
-			if (CheckPossibility(nextPos))
+			nextPos=currentRoom.RoomPosition+Vector2.FromAngle((lDoorSelected-1)*(Mathf.Pi/2));//add memory check
+			if (CheckPossibility(lDoorSelected))
 			{
-				currentRoom=SaveRoom(nextPos);
+				if(numberOfCreatedRoom==roomToCreate)currentRoom=SaveEndRoom(nextPos);
+				else currentRoom=SaveRoom(nextPos);
 				numberOfCreatedRoom++;
 			}
 		}
+		for (int i = 0; i < Rooms.Count; i++)
+		{
+			GD.Print(Rooms[i].RoomPosition);
+		}
+
+
 	}
 
 	
@@ -35,25 +43,26 @@ public partial class GraphGenerator : Node
 
 	TestRoom SaveRoom(Vector2 pPos)
 	{
-		return null;
+		return new TestRoom(pPos);
 	}
 	TestRoom SaveEndRoom(Vector2 pPos)
 	{
-		return null;
+		return SaveRoom(pPos);
 	}
 	TestRoom SaveStartRoom(Vector2 pPos)
 	{
-		return null;
+		return SaveRoom(pPos);
 	}
-	bool CheckPossibility(Vector2 pPos)
+	bool CheckPossibility(int lDoorSelected)
 	{
-		
+		if(!currentRoom.AvailableDoor[lDoorSelected])return false;
 		bool result=false;
 		foreach(TestRoom room in Rooms)
 		{
-			if (room.RoomPosition == pPos)
+			if (room.RoomPosition == nextPos)
 			{
-				result=true;
+				result=false;
+				currentRoom.AvailableDoor[lDoorSelected]=false;
 				break;
 			}
 		}
