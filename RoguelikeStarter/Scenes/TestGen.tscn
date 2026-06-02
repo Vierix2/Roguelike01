@@ -1,7 +1,16 @@
-[gd_scene load_steps=2 format=3 uid="uid://b7624ap3xelh6"]
+[gd_scene load_steps=5 format=3 uid="uid://b7624ap3xelh6"]
 
 [ext_resource type="Script" path="res://Scripts/Procedural/GraphGenerator.cs" id="1_26fah"]
+[ext_resource type="PackedScene" uid="uid://bpyhq7bhp0j4r" path="res://Scenes/TestStartRoom.tscn" id="2_pd7bc"]
+[ext_resource type="PackedScene" uid="uid://ltla4hl0b5ry" path="res://Scenes/TestRoom.tscn" id="3_oj8dq"]
+[ext_resource type="PackedScene" uid="uid://csq0vjcs5euh8" path="res://Scenes/TestFinalRoom.tscn" id="4_xn3ft"]
 
 [node name="TestGen" type="Node2D"]
 position = Vector2(639, 328)
 script = ExtResource("1_26fah")
+roomToCreate = 1000
+interval = 50.0
+roomScene = Array[PackedScene]([ExtResource("2_pd7bc"), ExtResource("3_oj8dq"), ExtResource("4_xn3ft")])
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(0.2, 0.2)
