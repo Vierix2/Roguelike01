@@ -18,10 +18,18 @@ public partial class GraphGenerator : Node
 		currentRoom=SaveStartRoom(Vector2I.Zero);
 		while (numberOfCreatedRoom<(roomToCreate+1))
 		{
+			if (CheckDeadEnd())
+			{
+				Rooms.RemoveAt(Rooms.Count-1);
+				currentRoom=Rooms[Rooms.Count-1];
+				continue;
+			}
+			
 			GD.Print("NEW TRY, number of room created",numberOfCreatedRoom);
 			int lDoorSelected=rand.RandiRange(0,3);
 			GD.Print("selected Door",lDoorSelected,currentRoom.RoomPosition+Vector2.FromAngle((lDoorSelected-1)*(Mathf.Pi/2)) );
 			nextPos=(Vector2I)((currentRoom.RoomPosition+Vector2.FromAngle((lDoorSelected-1)*(Mathf.Pi/2))).Round());
+			
 			if (CheckPossibility(lDoorSelected))
 			{
 				currentRoom.AvailableDoor[lDoorSelected]=false;
@@ -37,6 +45,17 @@ public partial class GraphGenerator : Node
 		}
 
 
+	}
+	bool CheckDeadEnd()
+	{
+		if (currentRoom.GetAvailableDoor() == 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	
