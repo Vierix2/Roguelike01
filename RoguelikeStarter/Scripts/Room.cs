@@ -1,5 +1,8 @@
 using Godot;
 using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Runtime.CompilerServices;
 
 /// <summary>
 /// A room.
@@ -9,14 +12,16 @@ using System.Collections.Generic;
 public partial class Room : Node2D
 {
     public enum RoomType { Start, End, Normal, Challenge, Hidden, Reward }
-
+    [Export] PackedScene doorScene;
+    [Export] Marker2D[] doorPositionList;
     [Export] public RoomType Type { get; private set; } = RoomType.Normal;
-
     [Export] private TileMap _tileMap;
     [Export] private Camera2D _camera;
     [Export] private Node2D _enemies;
     private Dictionary<Door.Side, Door> _doors = new();
-
+    public Vector2I RoomPosition;
+	public bool[] AvailableDoor = new bool[4];
+    RandomNumberGenerator rng = new RandomNumberGenerator();
     public override void _Ready()
     {
         if (_tileMap != null)
@@ -32,6 +37,46 @@ public partial class Room : Node2D
                 _doors[d.Direction] = d;
             }
         }
+
+        // DebugTestRandomBoolList();
+        SetDoorAvailable();
+
+        foreach(bool door in AvailableDoor) GD.Print(door);
+    }
+
+    private void DebugTestRandomBoolList()
+    {
+        for (int i = 0; i < AvailableDoor.Length; i++) AvailableDoor[i] = rng.RandiRange(0,1) == 1;
+    }
+
+    private void SetDoorAvailable()
+    {
+        int i = 0;
+        foreach(bool IsAvailibleDoorPosition in AvailableDoor)
+        {
+            if (IsAvailibleDoorPosition)CreateDoor(i);
+            i++;
+        }
+    }
+    
+    /// <summary>
+    /// Get all available door.
+    /// </summary>
+	public int GetAvailableDoor()
+	{
+		int result=0;
+		foreach(bool door in AvailableDoor)
+		{
+			if(door)result++;
+		}
+		return result;
+	}
+
+    private void CreateDoor(int x)
+    {
+        Door newDoor = doorScene.Instantiate() as Door;
+        newDoor.Position = doorPositionList[x].Position;
+        AddChild(newDoor);
     }
 
     /// <summary>
