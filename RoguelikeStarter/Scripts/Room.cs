@@ -5,8 +5,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 
 
-
-
 /// <summary>
 /// A room.
 /// It holds its type (start, end, normal...), its size in tiles and its doors.
@@ -33,15 +31,6 @@ public partial class Room : Node2D
 	public ERoomType RoomType;
 	public bool[] FinalOpenedDoors=new bool[4];
 
-    public void Init(Vector2I pPos)
-    {
-        RoomPosition=pPos;
-		for (int i = 0; i < AvailableDoor.Length; i++)
-		{
-			AvailableDoor[i]=true;
-		}
-    }
-
     public override void _Ready()
     {
         if (_tileMap != null)
@@ -63,9 +52,6 @@ public partial class Room : Node2D
             }
         }
 
-        // DebugTestRandomBoolList();
-        SetDoorAvailable();
-
         foreach(bool door in AvailableDoor) GD.Print(door);
     }
 
@@ -74,29 +60,15 @@ public partial class Room : Node2D
         for (int i = 0; i < AvailableDoor.Length; i++) AvailableDoor[i] = rng.RandiRange(0,1) == 1;
     }
 
-    private void SetDoorAvailable()
+    public void SetDoor(bool[] doorList)
     {
         int i = 0;
-        foreach(bool IsAvailibleDoorPosition in AvailableDoor)
+        foreach(bool IsAvailableDoorPosition in doorList)
         {
-            if (IsAvailibleDoorPosition)CreateDoor(i);
+            if (IsAvailableDoorPosition)CreateDoor(i);
             i++;
         }
     }
-    
-    /// <summary>
-    /// Get all available door.
-    /// </summary>
-	public int GetAvailableDoor()
-	{
-		int result=0;
-		foreach(bool door in AvailableDoor)
-		{
-			if(door)result++;
-		}
-		return result;
-	}
-
     private void CreateDoor(int x)
     {
         Door newDoor = doorScene.Instantiate() as Door;
@@ -111,6 +83,7 @@ public partial class Room : Node2D
     public void Enter(Player player)
     {
         Activate();
+        player.EnterRoom(this);
         GiveTargetToEnemies(player);
     }
 

@@ -12,6 +12,8 @@ public partial class Player : CharacterBody2D, IDamageable
     [Export] private Weapon _weapon;
     [Export] private CanvasItem _sprite;
 
+    private Room currentRoom;
+
     private const float BlinkFrequency = 30f;
     private const float BlinkAlpha = 0.4f;
 
@@ -29,7 +31,10 @@ public partial class Player : CharacterBody2D, IDamageable
     {
         _health.Died += OnDied;
     }
-
+    public void EnterRoom(Room pCurrentRoom)
+    {
+        currentRoom = pCurrentRoom;
+    }
     public override void _PhysicsProcess(double delta)
     {
         // Movement (ZQSD / arrow keys are reserved for shooting)

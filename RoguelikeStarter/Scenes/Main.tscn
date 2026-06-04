@@ -12,9 +12,8 @@
 script = ExtResource("1_game")
 numberOfRoomNeeded = 5
 roomContainer = NodePath("RoomContainer")
-RoomScene = Array[PackedScene]([ExtResource("2_iawh5")])
-RoomStartScene = ExtResource("3_qq4do")
-RoomEndScene = ExtResource("4_ure1t")
+roomInterval = 1250.0
+RoomScene = Array[PackedScene]([ExtResource("3_qq4do"), ExtResource("2_iawh5"), ExtResource("4_ure1t")])
 PlayerScene = ExtResource("3_3njj4")
 pathGenerator = NodePath("PathGenerator")
 

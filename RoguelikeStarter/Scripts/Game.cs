@@ -12,15 +12,13 @@ public partial class Game : Node2D
     [Export] private Node2D roomContainer;
 	[Export] float roomInterval=100;
 
-
     [ExportGroup("PackedScene")]
     [Export] private PackedScene[] RoomScene { get; set; }
-    [Export] private PackedScene RoomStartScene { get; set; }
-    [Export] private PackedScene RoomEndScene { get; set; }
     [Export] private PackedScene PlayerScene { get; set; }
     [Export] private PathGenerator pathGenerator;
 
-    private Room[] listOfRoomGenerated;
+    private DataRoom[] listOfRoomGenerated;
+    private Room[] listOfRoomCreated;
     private List<Room> roomListCreated = new List<Room>();
     private Node2D _projectiles;
     Vector2 roomStartPosition;
@@ -34,24 +32,18 @@ public partial class Game : Node2D
             return;
         }
 
-        listOfRoomGenerated = new Room[numberOfRoomNeeded + 2];
-
-        GD.Print("[Game] listOfRoomGenerated : " + listOfRoomGenerated.Length);
-
+        listOfRoomGenerated = new DataRoom[numberOfRoomNeeded + 2];
         listOfRoomGenerated = pathGenerator.GeneratePath(numberOfRoomNeeded);
 
-        GD.Print("[Game] listOfRoomGenerated : " + listOfRoomGenerated.Length);
-
-        var room = RoomStartScene.Instantiate<Room>();
-        AddChild(room);
+        CreateAllRoom();
 
         // After the room, so bullets draw above the floor instead of under it.
         _projectiles = new Node2D { Name = "Projectiles" };
         AddChild(_projectiles);
 
         var player = SpawnPlayer();
-        player.GlobalPosition = room.GlobalPosition;
-        room.Enter(player);
+        player.GlobalPosition = roomListCreated[0].GlobalPosition;
+        roomListCreated[0].Enter(player);
     }
 
     private Player SpawnPlayer()
@@ -73,45 +65,40 @@ public partial class Game : Node2D
     public void CreateAllRoom()
     {
         int iteration = 0;
-        foreach(Room room in listOfRoomGenerated)
+        foreach(DataRoom room in listOfRoomGenerated)
         {
-			//GD.Print(i,":",Rooms[i].RoomPosition);
-			// if (i == 0 || i == Rooms.Count - 1)
-			// {
-			// 	SpawnRoom(Rooms[i].RoomPosition, i==0?ERoomType.Start:ERoomType.End);
-			// }else SpawnRoom(Rooms[i].RoomPosition,ERoomType.Regular,i);
-        
-            if (room.RoomType == ERoomType.Start)
+            if (room.RoomType == DataRoom.ERoomType.Start)
             {
-                roomListCreated.Add(SpawnRoom(room.RoomPosition, room.RoomType, iteration) as Room);
+                roomListCreated.Add(SpawnRoom(room.RoomPosition, room.RoomType, iteration));
             }
-            else if (room.RoomType == ERoomType.Regular)
+            else if (room.RoomType == DataRoom.ERoomType.Regular)
             {
-                roomListCreated.Add(SpawnRoom(room.RoomPosition, room.RoomType, iteration) as Room);
+                roomListCreated.Add(SpawnRoom(room.RoomPosition, room.RoomType, iteration));
             }
-            else if (room.RoomType == ERoomType.End)
+            else if (room.RoomType == DataRoom.ERoomType.End)
             {
-                roomListCreated.Add(SpawnRoom(room.RoomPosition, room.RoomType, iteration) as Room);
+                roomListCreated.Add(SpawnRoom(room.RoomPosition, room.RoomType, iteration));
             }
-
             iteration++;
         }
     }
 
-	Node2D SpawnRoom(Vector2I pPos, ERoomType type, int roomNumber=0)
+	Room SpawnRoom(Vector2I pPos, DataRoom.ERoomType type, int roomNumber=0)
 	{
-		Node2D room= RoomScene[(int)type].Instantiate<Node2D>();
+        // GD.Print("" + (int)type);
+		Room room= RoomScene[(int)type].Instantiate<Room>();
 		roomContainer.AddChild(room);
+        room.SetDoor(listOfRoomGenerated[roomNumber].FinalOpenedDoors);
 		room.Position=(Vector2)pPos*roomInterval;
         switch (type)
         {
-            case ERoomType.Start:
+            case DataRoom.ERoomType.Start:
 				roomStartPosition=room.Position;
                 break;
-            case ERoomType.Regular:
+            case DataRoom.ERoomType.Regular:
 				room.GetChild<Label>(1).Text=roomNumber.ToString();
                 break;
-            case ERoomType.End:
+            case DataRoom.ERoomType.End:
 				roomEndPosition=room.Position;
                 break;
             default:
