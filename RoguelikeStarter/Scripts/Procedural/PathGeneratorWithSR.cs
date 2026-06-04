@@ -3,31 +3,31 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
-public partial class PathGenerator : GodotObject
+public partial class PathGeneratorWithSR : GodotObject
 {
 	List<DataRoom> Rooms=new List<DataRoom>();
 	DataRoom currentRoom;
 	int numberOfCreatedRoom;
 	int roomToCreate;
 	Vector2I nextPos;
-	float timeStart;
+
 	int attempt=0;
 	RandomNumberGenerator rand=new RandomNumberGenerator();
 	// Called when the node enters the scene tree for the first time.
 	
-	public DataRoom[] GeneratePath(int pRoomToCreate)
+	public DataRoom[] GeneratePath(int pRoomToCreate,int pRoomToKey,float minLockedDoorPosRatio, float maxLockedDoorPosRatio)
 	{
 		roomToCreate=pRoomToCreate;
 		//Create Starter room
-		currentRoom=SaveRoom(Vector2I.Zero,DataRoom.ERoomType.Start);
-		timeStart=Time.GetTicksMsec();
+		currentRoom=SaveRoom(Vector2I.Zero,DataRoom.ERoomType.Start,Rooms);
+
 		while (numberOfCreatedRoom<(roomToCreate+1))
 		{
 			attempt++;
 			if(attempt>roomToCreate*4)
 			{
 				Reset();
-				return GeneratePath(roomToCreate);
+				return GeneratePath(roomToCreate,pRoomToKey,minLockedDoorPosRatio,maxLockedDoorPosRatio);
 			}
 
 			if (CheckDeadEnd())
@@ -48,15 +48,16 @@ public partial class PathGenerator : GodotObject
 				currentRoom.AvailableDoor[lDoorSelected]=false;
 
 				//Create Boss room
-				if(numberOfCreatedRoom==roomToCreate)currentRoom=SaveRoom(nextPos,DataRoom.ERoomType.End);
+				if(numberOfCreatedRoom==roomToCreate)currentRoom=SaveRoom(nextPos,DataRoom.ERoomType.End,Rooms);
 
-				else currentRoom=SaveRoom(nextPos,DataRoom.ERoomType.Regular);
+				else currentRoom=SaveRoom(nextPos,DataRoom.ERoomType.Regular,Rooms);
 				currentRoom.AvailableDoor[(lDoorSelected+2)%4]=false;
 				numberOfCreatedRoom++;
 			}
 		}
-		GD.Print("Duration ",Time.GetTicksMsec()-timeStart,"ms with ",attempt, "tries");
-		
+
+		int lockedRoom=Mathf.RoundToInt(Rooms.Count*rand.RandfRange(minLockedDoorPosRatio,maxLockedDoorPosRatio));
+		Rooms[lockedRoom].RoomType=DataRoom.ERoomType.Locked;
 		for (int i = 0; i < Rooms.Count; i++)//To change for multiple path
         {
 
@@ -72,13 +73,68 @@ public partial class PathGenerator : GodotObject
 			GD.Print("[PathGenerator] i : " + i + " / Room count : " + Rooms.Count);
 			
         }
+		
+		
+
+
+
+
 		return Rooms.ToArray();
+	}
+	private DataRoom[] CreateSecondaryPath(int pRoomToKey,DataRoom pStartRoom)
+	{	
+		List<DataRoom> rooms=new List<DataRoom>();
+		currentRoom=pStartRoom;
+		
+		nextPos=Vector2I.Zero;
+
+		attempt=0;
+		while (pRoomToKey<(roomToCreate+1))
+		{
+			attempt++;
+			if(attempt>roomToCreate*4)
+			{
+				return CreateSecondaryPath(pRoomToKey,pStartRoom);
+			}
+
+			if (CheckDeadEnd())
+			{
+				rooms.RemoveAt(rooms.Count-1);
+				pRoomToKey--;
+				currentRoom=rooms[rooms.Count-1];
+				continue;
+			}
+
+			//GD.Print("NEW TRY, number of room created",numberOfCreatedRoom);
+			int lDoorSelected=rand.RandiRange(0,3);
+			//GD.Print("selected Door",lDoorSelected,currentRoom.RoomPosition+Vector2.FromAngle((lDoorSelected-1)*(Mathf.Pi/2)) );
+			nextPos=(Vector2I)((currentRoom.RoomPosition+Vector2.FromAngle((lDoorSelected-1)*(Mathf.Pi/2))).Round());
+			
+			if (CheckPossibility(lDoorSelected))
+			{
+				currentRoom.AvailableDoor[lDoorSelected]=false;
+
+				//Create Boss room
+				if(pRoomToKey==roomToCreate)currentRoom=SaveRoom(nextPos,DataRoom.ERoomType.Key,rooms);
+
+				else currentRoom=SaveRoom(nextPos,DataRoom.ERoomType.Regular,rooms);
+				currentRoom.AvailableDoor[(lDoorSelected+2)%4]=false;
+				pRoomToKey++;
+			}
+		}
+
+
+		return rooms.ToArray();
 	}
 	private void SetNextDoor(int i)
 	{
 		int door=(int)((((Vector2)(Rooms[i + 1].RoomPosition - Rooms[i].RoomPosition)).Angle()/(Mathf.Pi/2))+1)%4;
 		GD.Print("[PathGenerator] door : " + door);
 		Rooms[i].FinalOpenedDoors[door]=true;
+		if (Rooms[i].RoomType == DataRoom.ERoomType.Locked)
+		{
+			Rooms[i].LockedDoor=door;
+		}
 	}
 	private void SetPreviousDoor(int i)
 	{
@@ -102,19 +158,17 @@ public partial class PathGenerator : GodotObject
 
 	void Reset()
 	{
-		GD.Print("Reset with Duration ",Time.GetTicksMsec()-timeStart,"ms with ",attempt, "tries");
 		currentRoom=null;
 		numberOfCreatedRoom=0;
 		nextPos=Vector2I.Zero;
-		timeStart=0;
 		attempt=0;
 		Rooms.Clear();
 	}
 
-	DataRoom SaveRoom(Vector2I pPos, DataRoom.ERoomType type)
+	DataRoom SaveRoom(Vector2I pPos, DataRoom.ERoomType type,List<DataRoom> rooms)
 	{
 		DataRoom testRoom= new DataRoom(pPos, type);
-		Rooms.Add(testRoom);
+		rooms.Add(testRoom);
 		return testRoom;
 	}
 
