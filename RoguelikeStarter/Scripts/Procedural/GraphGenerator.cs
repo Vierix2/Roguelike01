@@ -10,6 +10,7 @@ public partial class GraphGenerator : Node
 	int numberOfCreatedRoom;
 	[Export] int roomToCreate=10;
 	[Export] float interval=100;
+	float fullTime;
 
 	[Export] PackedScene[] roomScene;
 
@@ -62,7 +63,9 @@ public partial class GraphGenerator : Node
 				numberOfCreatedRoom++;
 			}
 		}
-		GD.Print("Duration ",Time.GetTicksMsec()-timeStart,"ms with ",attempt, "tries");
+		float finalTime=Time.GetTicksMsec()-timeStart;
+		fullTime+=finalTime;
+		GD.Print("Duration ",fullTime,"ms with ",attempt, "tries");
 		for (int i = 0; i < Rooms.Count; i++)
 		{
 			//GD.Print(i,":",Rooms[i].RoomPosition);
@@ -91,7 +94,9 @@ public partial class GraphGenerator : Node
 
 	void Reset()
 	{
-		GD.Print("Reset with Duration ",Time.GetTicksMsec()-timeStart,"ms with ",attempt, "tries");
+		float finalTime=Time.GetTicksMsec()-timeStart;
+		fullTime+=finalTime;
+		GD.Print("Reset with Duration ",finalTime,"ms with ",attempt, "tries");
 		currentRoom=null;
 		numberOfCreatedRoom=0;
 		nextPos=Vector2I.Zero;
