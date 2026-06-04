@@ -2,20 +2,21 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public partial class TestRoom
+public partial class DataRoom
 {
 	public Vector2I RoomPosition;
-	// public ERoomType RoomType;
+	public ERoomType RoomType;
 	public bool[] AvailableDoor=new bool[4];
 	public bool[] FinalOpenedDoors=new bool[4];
-	// public enum ERoomType
-	// {
-	// 	Start,Regular,End
-	// }
+	public enum ERoomType
+	{
+		Start,Regular,End
+	}
 
-	public TestRoom(Vector2I pPos)
+	public DataRoom(Vector2I pPos,ERoomType pType=ERoomType.Regular)
 	{
 		RoomPosition=pPos;
+		RoomType=pType;
 		for (int i = 0; i < AvailableDoor.Length; i++)
 		{
 			AvailableDoor[i]=true;

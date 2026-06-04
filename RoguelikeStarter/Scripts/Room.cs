@@ -5,10 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 
 
-public enum ERoomType
-{
-	Start,Regular,End
-}
+
 
 /// <summary>
 /// A room.
@@ -17,6 +14,10 @@ public enum ERoomType
 /// </summary>
 public partial class Room : Node2D
 {
+    public enum ERoomType
+    {
+        Start,Regular,End
+    }
     // public enum RoomType { Start, End, Normal, Challenge, Hidden, Reward }
     // [Export] public RoomType Type { get; private set; } = RoomType.Normal;
 

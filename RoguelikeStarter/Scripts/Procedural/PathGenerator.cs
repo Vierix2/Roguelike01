@@ -5,8 +5,8 @@ using System.ComponentModel;
 
 public partial class PathGenerator : Node
 {
-	List<Room> Rooms=new List<Room>();
-	Room currentRoom;
+	List<DataRoom> Rooms=new List<DataRoom>();
+	DataRoom currentRoom;
 	int numberOfCreatedRoom;
 	int roomToCreate;
 	Vector2I nextPos;
@@ -18,11 +18,11 @@ public partial class PathGenerator : Node
 	{
 		// GD.Print(GeneratePath(10));
 	}
-	public Room[] GeneratePath(int pRoomToCreate)
+	public DataRoom[] GeneratePath(int pRoomToCreate)
 	{
 		roomToCreate=pRoomToCreate;
 		//Create Starter room
-		currentRoom=SaveRoom(Vector2I.Zero,ERoomType.Start);
+		currentRoom=SaveRoom(Vector2I.Zero,DataRoom.ERoomType.Start);
 		timeStart=Time.GetTicksMsec();
 		while (numberOfCreatedRoom<(roomToCreate+1))
 		{
@@ -51,9 +51,9 @@ public partial class PathGenerator : Node
 				currentRoom.AvailableDoor[lDoorSelected]=false;
 
 				//Create Boss room
-				if(numberOfCreatedRoom==roomToCreate)currentRoom=SaveRoom(nextPos,ERoomType.End);
+				if(numberOfCreatedRoom==roomToCreate)currentRoom=SaveRoom(nextPos,DataRoom.ERoomType.End);
 
-				else currentRoom=SaveRoom(nextPos,ERoomType.Regular);
+				else currentRoom=SaveRoom(nextPos,DataRoom.ERoomType.Regular);
 				currentRoom.AvailableDoor[(lDoorSelected+2)%4]=false;
 				numberOfCreatedRoom++;
 			}
@@ -93,10 +93,9 @@ public partial class PathGenerator : Node
 		Rooms.Clear();
 	}
 
-	Room SaveRoom(Vector2I pPos, ERoomType type)
+	DataRoom SaveRoom(Vector2I pPos, DataRoom.ERoomType type)
 	{
-		Room testRoom= new Room();
-		testRoom.Init(pPos);
+		DataRoom testRoom= new DataRoom(pPos, type);
 		Rooms.Add(testRoom);
 		return testRoom;
 	}
@@ -105,7 +104,7 @@ public partial class PathGenerator : Node
 	{
 		if(!currentRoom.AvailableDoor[lDoorSelected])return false;
 		bool result=true;
-		foreach(Room room in Rooms)
+		foreach(DataRoom room in Rooms)
 		{
 			if (room.RoomPosition == nextPos)
 			{
