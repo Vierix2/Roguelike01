@@ -1,13 +1,26 @@
-[gd_scene load_steps=5 format=3 uid="uid://b1main0001"]
+[gd_scene load_steps=8 format=3 uid="uid://b1main0001"]
 
 [ext_resource type="Script" path="res://Scripts/Game.cs" id="1_game"]
 [ext_resource type="PackedScene" uid="uid://b1hud0001" path="res://Scenes/HUD.tscn" id="2_hud"]
 [ext_resource type="PackedScene" uid="uid://52bxixlrw7jf" path="res://Scenes/Room.tscn" id="2_iawh5"]
 [ext_resource type="PackedScene" uid="uid://b1player01" path="res://Scenes/Player.tscn" id="3_3njj4"]
+[ext_resource type="PackedScene" uid="uid://drqgbsol4qo6d" path="res://Scenes/RoomStart.tscn" id="3_qq4do"]
+[ext_resource type="PackedScene" uid="uid://b6biv8ujvlk6l" path="res://Scenes/RoomEnd.tscn" id="4_ure1t"]
+[ext_resource type="Script" path="res://Scripts/Procedural/PathGenerator.cs" id="7_gaorf"]
 
-[node name="Main" type="Node2D"]
+[node name="Main" type="Node2D" node_paths=PackedStringArray("roomContainer", "pathGenerator")]
 script = ExtResource("1_game")
-RoomScene = ExtResource("2_iawh5")
+numberOfRoomNeeded = 5
+roomContainer = NodePath("RoomContainer")
+RoomScene = Array[PackedScene]([ExtResource("2_iawh5")])
+RoomStartScene = ExtResource("3_qq4do")
+RoomEndScene = ExtResource("4_ure1t")
 PlayerScene = ExtResource("3_3njj4")
+pathGenerator = NodePath("PathGenerator")
 
 [node name="HUD" parent="." instance=ExtResource("2_hud")]
+
+[node name="PathGenerator" type="Node2D" parent="."]
+script = ExtResource("7_gaorf")
+
+[node name="RoomContainer" type="Node2D" parent="."]

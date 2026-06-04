@@ -4,6 +4,9 @@ using System.Data;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
+
+
+
 /// <summary>
 /// A room.
 /// It holds its type (start, end, normal...), its size in tiles and its doors.
@@ -11,10 +14,15 @@ using System.Runtime.CompilerServices;
 /// </summary>
 public partial class Room : Node2D
 {
-    public enum RoomType { Start, End, Normal, Challenge, Hidden, Reward }
+    public enum ERoomType
+    {
+        Start,Regular,End
+    }
+    // public enum RoomType { Start, End, Normal, Challenge, Hidden, Reward }
+    // [Export] public RoomType Type { get; private set; } = RoomType.Normal;
+
     [Export] PackedScene doorScene;
     [Export] Marker2D[] doorPositionList;
-    [Export] public RoomType Type { get; private set; } = RoomType.Normal;
     [Export] private TileMap _tileMap;
     [Export] private Camera2D _camera;
     [Export] private Node2D _enemies;
@@ -22,11 +30,28 @@ public partial class Room : Node2D
     public Vector2I RoomPosition;
 	public bool[] AvailableDoor = new bool[4];
     RandomNumberGenerator rng = new RandomNumberGenerator();
+	public ERoomType RoomType;
+	public bool[] FinalOpenedDoors=new bool[4];
+
+    public void Init(Vector2I pPos)
+    {
+        RoomPosition=pPos;
+		for (int i = 0; i < AvailableDoor.Length; i++)
+		{
+			AvailableDoor[i]=true;
+		}
+    }
+
     public override void _Ready()
     {
         if (_tileMap != null)
         {
             ConfigureCamera();
+            // if (this.RoomType == ERoomType.Start)
+            // {
+            //     _camera.Zoom = new Vector2(0.5f,0.5f);
+            //     _camera.GlobalPosition = new Vector2(0,0);
+            // }
         }
 
         // Find every door that belongs to this room.

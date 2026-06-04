@@ -5,8 +5,8 @@ using System.ComponentModel;
 
 public partial class GraphGenerator : Node
 {
-	List<TestRoom> Rooms=new List<TestRoom>();
-	TestRoom currentRoom;
+	List<DataRoom> Rooms=new List<DataRoom>();
+	DataRoom currentRoom;
 	int numberOfCreatedRoom;
 	[Export] int roomToCreate=10;
 	[Export] float interval=100;
@@ -108,17 +108,17 @@ public partial class GraphGenerator : Node
 		_Ready();
 	}
 
-	TestRoom SaveRoom(Vector2I pPos)
+	DataRoom SaveRoom(Vector2I pPos)
 	{
-		TestRoom testRoom= new TestRoom(pPos);
+		DataRoom testRoom= new DataRoom(pPos);
 		Rooms.Add(testRoom);
 		return testRoom;
 	}
-	TestRoom SaveEndRoom(Vector2I pPos)
+	DataRoom SaveEndRoom(Vector2I pPos)
 	{
 		return SaveRoom(pPos);
 	}
-	TestRoom SaveStartRoom(Vector2I pPos)
+	DataRoom SaveStartRoom(Vector2I pPos)
 	{
 		return SaveRoom(pPos);
 	}
@@ -151,7 +151,7 @@ public partial class GraphGenerator : Node
 	{
 		if(!currentRoom.AvailableDoor[lDoorSelected])return false;
 		bool result=true;
-		foreach(TestRoom room in Rooms)
+		foreach(DataRoom room in Rooms)
 		{
 			if (room.RoomPosition == nextPos)
 			{

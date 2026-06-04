@@ -8,9 +8,8 @@
 [node name="TestGen" type="Node2D"]
 position = Vector2(639, 328)
 script = ExtResource("1_26fah")
-roomToCreate = 1000
+roomToCreate = 20
 interval = 50.0
 roomScene = Array[PackedScene]([ExtResource("2_pd7bc"), ExtResource("3_oj8dq"), ExtResource("4_xn3ft")])
 
 [node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(0.2, 0.2)
