@@ -85,7 +85,7 @@ public partial class PathGenerator : Node
 	}
 	private void SetPreviousDoor(int i)
 	{
-		int door=(int)((((Vector2)(Rooms[i].RoomPosition - Rooms[i-1].RoomPosition)).Angle()/(Mathf.Pi/2))+1)%4;
+		int door=(int)((((Vector2)(Rooms[i].RoomPosition - Rooms[i-1].RoomPosition)).Angle()/(Mathf.Pi/2))+3)%4;
 		GD.Print("[PathGenerator] door : " + door);
 		Rooms[i].FinalOpenedDoors[door]=true;
 	}
