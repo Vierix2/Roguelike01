@@ -59,14 +59,35 @@ public partial class PathGenerator : Node
 			}
 		}
 		GD.Print("Duration ",Time.GetTicksMsec()-timeStart,"ms with ",attempt, "tries");
-		for (int i = 0; i < Rooms.Count - 1; i++)
+		
+		for (int i = 0; i < Rooms.Count; i++)//To change for multiple path
         {
+
+			if (i != 0)
+			{
+				SetPreviousDoor(i);
+			}
+			if(i != Rooms.Count)
+			{
+				SetNextDoor(i);
+			}
+			
 			GD.Print("[PathGenerator] i : " + i + " / Room count : " + Rooms.Count);
-			int door=(int)((((Vector2)(Rooms[i + 1].RoomPosition - Rooms[i].RoomPosition)).Angle()/(Mathf.Pi/2))+1)%4;
-			GD.Print("[PathGenerator] door : " + door);
-			Rooms[i].FinalOpenedDoors[door]=true;
+			
         }
 		return Rooms.ToArray();
+	}
+	private void SetNextDoor(int i)
+	{
+		int door=(int)((((Vector2)(Rooms[i + 1].RoomPosition - Rooms[i].RoomPosition)).Angle()/(Mathf.Pi/2))+1)%4;
+		GD.Print("[PathGenerator] door : " + door);
+		Rooms[i].FinalOpenedDoors[door]=true;
+	}
+	private void SetPreviousDoor(int i)
+	{
+		int door=(int)((((Vector2)(Rooms[i].RoomPosition - Rooms[i-1].RoomPosition)).Angle()/(Mathf.Pi/2))+1)%4;
+		GD.Print("[PathGenerator] door : " + door);
+		Rooms[i].FinalOpenedDoors[door]=true;
 	}
 	bool CheckDeadEnd()
 	{
