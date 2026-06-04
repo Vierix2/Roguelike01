@@ -1,6 +1,6 @@
 [gd_resource type="TileSet" load_steps=4 format=3 uid="uid://b5e6ekqfvxmqu"]
 
-[ext_resource type="Texture2D" uid="uid://dkwx21wj751ik" path="res://Assets/kenney_tiny-dungeon/Tilemap/tilemap_packed_scaled.png" id="1_unkak"]
+[ext_resource type="Texture2D" uid="uid://bgnjek3k82uh5" path="res://Assets/kenney_tiny-dungeon/Tilemap/tilemap_packed_scaled.png" id="1_unkak"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_0421o"]
 
