@@ -67,7 +67,7 @@ public partial class PathGenerator : Node
 			{
 				SetPreviousDoor(i);
 			}
-			if(i != Rooms.Count)
+			if(i != Rooms.Count-1)
 			{
 				SetNextDoor(i);
 			}
