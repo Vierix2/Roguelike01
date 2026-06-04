@@ -18,6 +18,11 @@ public partial class Door : Area2D
         BodyEntered += OnBodyEntered;
     }
 
+    public void Init(Side doorDirection)
+    {
+        Direction = doorDirection;
+    }
+
     private void OnBodyEntered(Node2D body)
     {
         if (body.IsInGroup("player"))

@@ -10,7 +10,6 @@ public partial class GraphGenerator : Node
 	int numberOfCreatedRoom;
 	[Export] int roomToCreate=10;
 	[Export] float interval=100;
-
 	[Export] PackedScene[] roomScene;
 
 	enum ERoomType

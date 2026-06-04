@@ -5,13 +5,13 @@ using System.Collections.Generic;
 public partial class TestRoom
 {
 	public Vector2I RoomPosition;
-	public ERoomType RoomType;
+	// public ERoomType RoomType;
 	public bool[] AvailableDoor=new bool[4];
 	public bool[] FinalOpenedDoors=new bool[4];
-	public enum ERoomType
-	{
-		Start,Regular,End
-	}
+	// public enum ERoomType
+	// {
+	// 	Start,Regular,End
+	// }
 
 	public TestRoom(Vector2I pPos)
 	{

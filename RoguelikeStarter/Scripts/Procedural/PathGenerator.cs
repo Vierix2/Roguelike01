@@ -5,11 +5,10 @@ using System.ComponentModel;
 
 public partial class PathGenerator : Node
 {
-	List<TestRoom> Rooms=new List<TestRoom>();
-	TestRoom currentRoom;
+	List<Room> Rooms=new List<Room>();
+	Room currentRoom;
 	int numberOfCreatedRoom;
 	int roomToCreate;
-
 	Vector2I nextPos;
 	float timeStart;
 	int attempt=0;
@@ -17,13 +16,13 @@ public partial class PathGenerator : Node
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		GD.Print(GeneratePath(10));
+		// GD.Print(GeneratePath(10));
 	}
-
-	TestRoom[] GeneratePath(int pRoomToCreate)
+	public Room[] GeneratePath(int pRoomToCreate)
 	{
 		roomToCreate=pRoomToCreate;
-		currentRoom=SaveRoom(Vector2I.Zero,TestRoom.ERoomType.Start);
+		//Create Starter room
+		currentRoom=SaveRoom(Vector2I.Zero,ERoomType.Start);
 		timeStart=Time.GetTicksMsec();
 		while (numberOfCreatedRoom<(roomToCreate+1))
 		{
@@ -50,8 +49,11 @@ public partial class PathGenerator : Node
 			if (CheckPossibility(lDoorSelected))
 			{
 				currentRoom.AvailableDoor[lDoorSelected]=false;
-				if(numberOfCreatedRoom==roomToCreate)currentRoom=SaveRoom(nextPos,TestRoom.ERoomType.End);
-				else currentRoom=SaveRoom(nextPos,TestRoom.ERoomType.Regular);
+
+				//Create Boss room
+				if(numberOfCreatedRoom==roomToCreate)currentRoom=SaveRoom(nextPos,ERoomType.End);
+
+				else currentRoom=SaveRoom(nextPos,ERoomType.Regular);
 				currentRoom.AvailableDoor[(lDoorSelected+2)%4]=false;
 				numberOfCreatedRoom++;
 			}
@@ -59,7 +61,9 @@ public partial class PathGenerator : Node
 		GD.Print("Duration ",Time.GetTicksMsec()-timeStart,"ms with ",attempt, "tries");
 		for (int i = 0; i < Rooms.Count - 1; i++)
         {
+			GD.Print("[PathGenerator] i : " + i + " / Room count : " + Rooms.Count);
 			int door=(int)(((Vector2)(Rooms[i + 1].RoomPosition - Rooms[i].RoomPosition)).Angle()/(Mathf.Pi/2))-1;
+			GD.Print("[PathGenerator] door : " + door);
 			Rooms[i].FinalOpenedDoors[door]=true;
         }
 		return Rooms.ToArray();
@@ -89,19 +93,19 @@ public partial class PathGenerator : Node
 		Rooms.Clear();
 	}
 
-	TestRoom SaveRoom(Vector2I pPos, TestRoom.ERoomType type)
+	Room SaveRoom(Vector2I pPos, ERoomType type)
 	{
-		TestRoom testRoom= new TestRoom(pPos);
+		Room testRoom= new Room();
+		testRoom.Init(pPos);
 		Rooms.Add(testRoom);
 		return testRoom;
 	}
-
 
     bool CheckPossibility(int lDoorSelected)
 	{
 		if(!currentRoom.AvailableDoor[lDoorSelected])return false;
 		bool result=true;
-		foreach(TestRoom room in Rooms)
+		foreach(Room room in Rooms)
 		{
 			if (room.RoomPosition == nextPos)
 			{
