@@ -62,7 +62,7 @@ public partial class PathGenerator : Node
 		for (int i = 0; i < Rooms.Count - 1; i++)
         {
 			GD.Print("[PathGenerator] i : " + i + " / Room count : " + Rooms.Count);
-			int door=(int)(((Vector2)(Rooms[i + 1].RoomPosition - Rooms[i].RoomPosition)).Angle()/(Mathf.Pi/2))-1;
+			int door=(int)((((Vector2)(Rooms[i + 1].RoomPosition - Rooms[i].RoomPosition)).Angle()/(Mathf.Pi/2))+1)%4;
 			GD.Print("[PathGenerator] door : " + door);
 			Rooms[i].FinalOpenedDoors[door]=true;
         }
