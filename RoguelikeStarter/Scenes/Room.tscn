@@ -37,15 +37,16 @@ label_settings = SubResource("LabelSettings_3gcf6")
 position = Vector2(354, 18)
 
 [node name="Door" type="Node2D" parent="."]
+position = Vector2(4, 0)
 
 [node name="LeftDoor" type="Marker2D" parent="Door"]
-position = Vector2(585, 0)
+position = Vector2(554, 0)
 
 [node name="RightDoor" type="Marker2D" parent="Door"]
-position = Vector2(-585, 0)
+position = Vector2(-480, 0)
 
 [node name="UpDoor" type="Marker2D" parent="Door"]
-position = Vector2(0, -280)
+position = Vector2(0, -240)
 
 [node name="DownDoor" type="Marker2D" parent="Door"]
-position = Vector2(0, 306)
+position = Vector2(0, 275)

@@ -24,11 +24,13 @@ public partial class Room : Node2D
     [Export] private TileMap _tileMap;
     [Export] private Camera2D _camera;
     [Export] private Node2D _enemies;
+    public List<Door> listOfDoor = new List<Door>();
     private Dictionary<Door.Side, Door> _doors = new();
     public Vector2I RoomPosition;
 	public bool[] AvailableDoor = new bool[4];
     RandomNumberGenerator rng = new RandomNumberGenerator();
 	public ERoomType RoomType;
+    Door doorType;
 	public bool[] FinalOpenedDoors=new bool[4];
 
     public override void _Ready()
@@ -36,11 +38,6 @@ public partial class Room : Node2D
         if (_tileMap != null)
         {
             ConfigureCamera();
-            // if (this.RoomType == ERoomType.Start)
-            // {
-            //     _camera.Zoom = new Vector2(0.5f,0.5f);
-            //     _camera.GlobalPosition = new Vector2(0,0);
-            // }
         }
 
         // Find every door that belongs to this room.
@@ -52,7 +49,7 @@ public partial class Room : Node2D
             }
         }
 
-        foreach(bool door in AvailableDoor) GD.Print(door);
+        foreach(bool door in AvailableDoor);     //GD.Print(door);
     }
 
     private void DebugTestRandomBoolList()
@@ -68,11 +65,22 @@ public partial class Room : Node2D
             if (IsAvailableDoorPosition)CreateDoor(i);
             i++;
         }
+
+        
+        int iter = 0;
+        foreach(bool IsOpen in FinalOpenedDoors)
+        {
+            if (IsOpen) listOfDoor[iter].OpenDoor();
+            iter++;
+        }
     }
+    
     private void CreateDoor(int x)
     {
         Door newDoor = doorScene.Instantiate() as Door;
+        newDoor.Init((Door.Side) x);
         newDoor.Position = doorPositionList[x].Position;
+        listOfDoor.Add(newDoor);
         AddChild(newDoor);
     }
 

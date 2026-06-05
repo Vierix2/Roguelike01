@@ -7,11 +7,9 @@ using Godot;
 public partial class Player : CharacterBody2D, IDamageable
 {
     [Export] private float Speed { get; set; } = 220f;
-
     [Export] private HealthComponent _health;
     [Export] private Weapon _weapon;
     [Export] private CanvasItem _sprite;
-
     private Room currentRoom;
 
     private const float BlinkFrequency = 30f;
