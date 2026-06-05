@@ -31,16 +31,16 @@ position = Vector2(354, 18)
 [node name="Door" type="Node2D" parent="."]
 
 [node name="LeftDoor" type="Marker2D" parent="Door"]
-position = Vector2(585, 0)
+position = Vector2(560, 0)
 
 [node name="RightDoor" type="Marker2D" parent="Door"]
-position = Vector2(-585, 0)
+position = Vector2(-530, 0)
 
 [node name="UpDoor" type="Marker2D" parent="Door"]
-position = Vector2(0, -280)
+position = Vector2(0, -241)
 
 [node name="DownDoor" type="Marker2D" parent="Door"]
-position = Vector2(0, 306)
+position = Vector2(0, 271)
 
 [node name="Label" type="Label" parent="."]
 offset_left = -72.0
