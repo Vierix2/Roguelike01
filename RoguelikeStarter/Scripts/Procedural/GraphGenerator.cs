@@ -20,7 +20,7 @@ public partial class GraphGenerator : Node
 	Vector2 end;
 	float timeStart;
 	int attempt=0;
-	PathGenerator pathGenerator=new PathGenerator();
+	PathGeneratorWithSR pathGenerator=new PathGeneratorWithSR();
 
 	RandomNumberGenerator rand=new RandomNumberGenerator();
 	// Called when the node enters the scene tree for the first time.
@@ -28,7 +28,7 @@ public partial class GraphGenerator : Node
 	{
 		
 		
-		Rooms=pathGenerator.GeneratePath(roomToCreate);
+		Rooms=pathGenerator.GeneratePath(roomToCreate,Mathf.CeilToInt(roomToCreate*0.2f),0.25f,0.75f);
 		for (int i = 0; i < Rooms.Length; i++)
 		{
 			//GD.Print(i,":",Rooms[i].RoomPosition);

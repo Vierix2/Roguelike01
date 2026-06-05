@@ -73,6 +73,8 @@ public partial class PathGeneratorWithSR : GodotObject
 			GD.Print("[PathGenerator] i : " + i + " / Room count : " + Rooms.Count);
 			
         }
+		int startRoom=rand.RandiRange(2,lockedRoom-2);
+		CreateSecondaryPath(pRoomToKey,Rooms[startRoom]);
 		
 		
 
@@ -81,9 +83,9 @@ public partial class PathGeneratorWithSR : GodotObject
 
 		return Rooms.ToArray();
 	}
-	private DataRoom[] CreateSecondaryPath(int pRoomToKey,DataRoom pStartRoom)
+	private void CreateSecondaryPath(int pRoomToKey,DataRoom pStartRoom)
 	{	
-		List<DataRoom> rooms=new List<DataRoom>();
+		List<DataRoom> rooms=Rooms;
 		currentRoom=pStartRoom;
 		
 		nextPos=Vector2I.Zero;
@@ -94,14 +96,15 @@ public partial class PathGeneratorWithSR : GodotObject
 			attempt++;
 			if(attempt>roomToCreate*4)
 			{
-				return CreateSecondaryPath(pRoomToKey,pStartRoom);
+				Rooms=rooms;
+				CreateSecondaryPath(pRoomToKey,pStartRoom);
 			}
 
-			if (CheckDeadEnd())
+			if (CheckDeadEnd()&&currentRoom!=pStartRoom)
 			{
-				rooms.RemoveAt(rooms.Count-1);
+				Rooms.RemoveAt(Rooms.Count-1);
 				pRoomToKey--;
-				currentRoom=rooms[rooms.Count-1];
+				currentRoom=Rooms[Rooms.Count-1];
 				continue;
 			}
 
@@ -115,16 +118,16 @@ public partial class PathGeneratorWithSR : GodotObject
 				currentRoom.AvailableDoor[lDoorSelected]=false;
 
 				//Create Boss room
-				if(pRoomToKey==roomToCreate)currentRoom=SaveRoom(nextPos,DataRoom.ERoomType.Key,rooms);
+				if(pRoomToKey==roomToCreate)currentRoom=SaveRoom(nextPos,DataRoom.ERoomType.Key,Rooms);
 
-				else currentRoom=SaveRoom(nextPos,DataRoom.ERoomType.Regular,rooms);
+				else currentRoom=SaveRoom(nextPos,DataRoom.ERoomType.Regular,Rooms);
 				currentRoom.AvailableDoor[(lDoorSelected+2)%4]=false;
 				pRoomToKey++;
 			}
 		}
 
 
-		return rooms.ToArray();
+		
 	}
 	private void SetNextDoor(int i)
 	{
@@ -135,6 +138,18 @@ public partial class PathGeneratorWithSR : GodotObject
 		{
 			Rooms[i].LockedDoor=door;
 		}
+	}
+	private void SetDoor(DataRoom room1, DataRoom room2)
+	{
+		int door=(int)((((Vector2)(room2.RoomPosition - room1.RoomPosition)).Angle()/(Mathf.Pi/2))+1)%4;
+		GD.Print("[PathGenerator] door : " + door);
+		room1.FinalOpenedDoors[door]=true;
+		if (room1.RoomType == DataRoom.ERoomType.Locked)
+		{
+			room1.LockedDoor=door;
+		}
+		door=(int)((((Vector2)(room1.RoomPosition - room2.RoomPosition)).Angle()/(Mathf.Pi/2))+1)%4;
+		room2.FinalOpenedDoors[door]=true;
 	}
 	private void SetPreviousDoor(int i)
 	{

@@ -10,19 +10,19 @@ public partial class Game : Node2D
 {
     [Export] private int numberOfRoomNeeded;
     [Export] private Node2D roomContainer;
-	[Export] float roomInterval=100;
-
+    [Export] float roomInterval = 100;
+    private PathGenerator pathGenerator = new PathGenerator();
     [ExportGroup("PackedScene")]
     [Export] private PackedScene[] RoomScene { get; set; }
     [Export] private PackedScene PlayerScene { get; set; }
-    [Export] private PathGenerator pathGenerator;
+
 
     private DataRoom[] listOfRoomGenerated;
     private Room[] listOfRoomCreated;
     private List<Room> roomListCreated = new List<Room>();
     private Node2D _projectiles;
     Vector2 roomStartPosition;
-	Vector2 roomEndPosition;
+    Vector2 roomEndPosition;
 
     public override void _Ready()
     {
@@ -65,7 +65,7 @@ public partial class Game : Node2D
     public void CreateAllRoom()
     {
         int iteration = 0;
-        foreach(DataRoom room in listOfRoomGenerated)
+        foreach (DataRoom room in listOfRoomGenerated)
         {
             if (room.RoomType == DataRoom.ERoomType.Start)
             {
@@ -83,26 +83,26 @@ public partial class Game : Node2D
         }
     }
 
-	Room SpawnRoom(Vector2I pPos, DataRoom.ERoomType type, int roomNumber=0)
-	{
+    Room SpawnRoom(Vector2I pPos, DataRoom.ERoomType type, int roomNumber = 0)
+    {
         // GD.Print("" + (int)type);
-		Room room= RoomScene[(int)type].Instantiate<Room>();
-		roomContainer.AddChild(room);
+        Room room = RoomScene[(int)type].Instantiate<Room>();
+        roomContainer.AddChild(room);
         room.SetDoor(listOfRoomGenerated[roomNumber].FinalOpenedDoors);
-		room.Position=(Vector2)pPos*roomInterval;
+        room.Position = (Vector2)pPos * roomInterval;
         switch (type)
         {
             case DataRoom.ERoomType.Start:
-				roomStartPosition=room.Position;
+                roomStartPosition = room.Position;
                 break;
             case DataRoom.ERoomType.Regular:
-				room.GetChild<Label>(1).Text=roomNumber.ToString();
+                room.GetChild<Label>(1).Text = roomNumber.ToString();
                 break;
             case DataRoom.ERoomType.End:
-				roomEndPosition=room.Position;
+                roomEndPosition = room.Position;
                 break;
             default:
-				break;
+                break;
         }
         return room;
     }
