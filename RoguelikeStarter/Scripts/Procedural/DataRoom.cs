@@ -8,9 +8,10 @@ public partial class DataRoom
 	public ERoomType RoomType;
 	public bool[] AvailableDoor=new bool[4];
 	public bool[] FinalOpenedDoors=new bool[4];
+	public int LockedDoor=-1;
 	public enum ERoomType
 	{
-		Start,Regular,End
+		Start,Regular,End,Locked,Key
 	}
 
 	public DataRoom(Vector2I pPos,ERoomType pType=ERoomType.Regular)
