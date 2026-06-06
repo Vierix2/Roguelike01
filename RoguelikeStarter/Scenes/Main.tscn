@@ -4,8 +4,8 @@
 [ext_resource type="PackedScene" uid="uid://b1hud0001" path="res://Scenes/HUD.tscn" id="2_hud"]
 [ext_resource type="PackedScene" uid="uid://52bxixlrw7jf" path="res://Scenes/Room.tscn" id="2_iawh5"]
 [ext_resource type="PackedScene" uid="uid://b1player01" path="res://Scenes/Player.tscn" id="3_3njj4"]
-[ext_resource type="PackedScene" uid="uid://drqgbsol4qo6d" path="res://Scenes/RoomStart.tscn" id="3_qq4do"]
-[ext_resource type="PackedScene" uid="uid://b6biv8ujvlk6l" path="res://Scenes/RoomEnd.tscn" id="4_ure1t"]
+[ext_resource type="PackedScene" path="res://Scenes/RoomStart.tscn" id="3_qq4do"]
+[ext_resource type="PackedScene" path="res://Scenes/RoomEnd.tscn" id="4_ure1t"]
 [ext_resource type="Script" path="res://Scripts/Procedural/PathGenerator.cs" id="7_gaorf"]
 
 [node name="Main" type="Node2D" node_paths=PackedStringArray("roomContainer")]
@@ -15,8 +15,6 @@ roomContainer = NodePath("RoomContainer")
 roomInterval = 1500.0
 RoomScene = Array[PackedScene]([ExtResource("3_qq4do"), ExtResource("2_iawh5"), ExtResource("4_ure1t")])
 PlayerScene = ExtResource("3_3njj4")
-pathGenerator = Object(Node2D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(1, 1, 1, 1),"show_behind_parent":false,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":null,"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"script":ExtResource("7_gaorf"))
-
 
 [node name="HUD" parent="." instance=ExtResource("2_hud")]
 

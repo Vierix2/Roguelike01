@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://Scripts/Player.cs" id="1_player"]
 [ext_resource type="PackedScene" uid="uid://b1bullet001" path="res://Scenes/Bullet.tscn" id="2_bullet"]
-[ext_resource type="Texture2D" uid="uid://bfs23rt5hn3pt" path="res://Assets/kenney_tiny-dungeon/Tiles/tile_0085.png" id="2_hq0yd"]
+[ext_resource type="Texture2D" uid="uid://dtmueqauq45ca" path="res://Assets/kenney_tiny-dungeon/Tiles/tile_0085.png" id="2_hq0yd"]
 [ext_resource type="Script" path="res://Scripts/HealthComponent.cs" id="3_health"]
 [ext_resource type="Script" path="res://Scripts/Weapon.cs" id="4_weapon"]
 

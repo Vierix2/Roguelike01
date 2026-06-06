@@ -73,8 +73,23 @@ public partial class PathGeneratorWithSR : GodotObject
 			GD.Print("[PathGenerator] i : " + i + " / Room count : " + Rooms.Count);
 			
         }
-		int startRoom=rand.RandiRange(2,lockedRoom-2);
+		int startRoom=rand.RandiRange(2,lockedRoom);
+		int endPath=Rooms.Count;
 		CreateSecondaryPath(pRoomToKey,Rooms[startRoom]);
+		SetDoor(Rooms[startRoom],Rooms[endPath]);
+		for (int i = endPath+1; i < Rooms.Count; i++)
+		{
+			if (i != 0)
+			{
+				SetPreviousDoor(i);
+			}
+			if(i != Rooms.Count-1)
+			{
+				SetNextDoor(i);
+			}
+			
+			GD.Print("[PathGenerator] i : " + i + " / Room count : " + Rooms.Count);
+		}
 		
 		
 

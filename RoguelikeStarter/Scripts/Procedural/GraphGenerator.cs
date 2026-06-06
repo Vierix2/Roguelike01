@@ -28,16 +28,22 @@ public partial class GraphGenerator : Node
 	{
 		
 		
-		Rooms=pathGenerator.GeneratePath(roomToCreate,Mathf.CeilToInt(roomToCreate*0.2f),0.25f,0.75f);
+		Rooms=pathGenerator.GeneratePath(roomToCreate,Mathf.CeilToInt(roomToCreate*0.4f),0.25f,0.75f);
 		for (int i = 0; i < Rooms.Length; i++)
 		{
 			//GD.Print(i,":",Rooms[i].RoomPosition);
 			SpawnRoom(Rooms[i].RoomPosition, Rooms[i].RoomType,i);
 			
 		}
-		for (int i = 0; i < Rooms.Length-1; i++)
+		for (int i = 0; i < Rooms.Length; i++)
 		{
-			SpawnLine(Rooms[i+1].RoomPosition,Rooms[i].RoomPosition);
+			for(int j=0;j<Rooms[i].FinalOpenedDoors.Length;j++)
+			{
+				if (Rooms[i].FinalOpenedDoors[j])
+				{
+					SpawnLine(Rooms[i].RoomPosition,(Vector2I)((Rooms[i].RoomPosition+Vector2.FromAngle((j-1)*(Mathf.Pi/2))).Round()));
+				}
+			}
 		}
 		GetChild<Camera2D>(0).Position=end/2f;
 
